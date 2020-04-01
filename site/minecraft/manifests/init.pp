@@ -1,5 +1,6 @@
-class minecraft {
+class minecraft (
   $install_dir = '/opt/minecraft'
+){
   file {$install_dir:
     ensure => directory,
   }
@@ -16,8 +17,10 @@ class minecraft {
     content => 'eula=true',
   }
   file {'/etc/systemd/system/minecraft.service':
-    ensure => file,
-    source => 'puppet:///modules/minecraft/minecraft.service',
+    ensure  => file,
+    content => epp('minecraft/minecraft.service',{
+      install_dir => $install_dir
+    })
   }
   service { 'minecraft':
     ensure  => running,
